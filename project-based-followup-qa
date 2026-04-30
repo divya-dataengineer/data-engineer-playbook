@@ -1,0 +1,122 @@
+# 📘 Data Engineer Interview Preparation – Follow-up Questions
+
+This document contains commonly asked follow-up questions based on my self-introduction for Data Engineer interviews, along with structured answers.
+---------------------------------------------------------------------
+## 🔹 1. Explain your current project in detail
+
+It’s a batch ETL pipeline where data is ingested from source systems into Amazon S3. Then we process it using PySpark on AWS EMR or AWS Glue.
+We perform data cleaning, validation, and transformations, and then store processed data for querying using Amazon Athena.
+I mainly handle monitoring, validation, failure handling, and reconciliation to ensure data accuracy.
+
+Sample Syntax:
+
+df = spark.read.csv("s3://bucket/input")
+df_clean = df.filter(df["col"].isNotNull())
+df_clean.write.mode("overwrite").parquet("s3://bucket/output")
+--------------------------------------------------------------------
+
+## 🔹 2. What exactly is your role?
+
+I monitor data loads, validate data quality, handle failures, and perform reconciliation. I also work on PySpark transformations and support optimization of pipelines when performance issues occur.
+
+Sample Validation Syntax:
+
+source_count = df_source.count()
+target_count = df_target.count()
+print(source_count == target_count)
+---------------------------------------------------------------------
+
+## 🔹 3. How do you handle data failures?
+
+First, I identify the failure by checking logs. Then I analyze the root cause — whether it’s a data issue, schema mismatch, or resource issue. Finally, I fix the issue and rerun the job, ensuring data consistency.
+---------------------------------------------------------------------
+
+## 🔹 4. Explain incremental load
+
+Incremental load means processing only new or updated data instead of the entire dataset. I implement it using timestamps or last processed values, filtering only new records and appending them to the target.
+
+Sample Syntax:
+
+df_new = df.filter(df["updated_date"] > last_processed_date)
+----------------------------------------------------------------------
+
+## 🔹 5. What optimizations have you done?
+
+I have used broadcast joins for small datasets, optimized partitions using repartition, and avoided unnecessary caching to improve performance.
+
+Sample Syntax:
+
+from pyspark.sql.functions import broadcast
+
+df_join = df1.join(broadcast(df2), "id")
+------------------------------------------------------------------------
+
+## 🔹 6. What challenges did you face?
+
+One challenge was handling large data causing performance issues, which I resolved by optimizing joins and partitioning. Another was handling data mismatches during reconciliation, which I fixed through validation checks.
+
+Sample Syntax (Repartition):
+
+df = df.repartition(200, "customer_id")
+------------------------------------------------------------------------
+
+## 🔹 7. How do you ensure data quality?
+
+I perform validation checks such as row count comparison, null checks, and reconciliation between source and target systems to ensure data consistency.
+
+Sample Syntax:
+
+df.filter(df["col"].isNull()).count()
+-------------------------------------------------------------------------
+
+## 🔹 8. Have you worked on PySpark development?
+
+Yes, I have worked on writing PySpark transformations like joins, aggregations, and filtering. Recently, I have been focusing more on improving my hands-on development and optimization skills.
+
+Sample Syntax:
+
+df.groupBy("dept").sum("salary")
+--------------------------------------------------------------------------
+
+## 🔹 9. Difference between full load and incremental load
+
+Full load processes the entire dataset every time, whereas incremental load processes only new or changed data, making it more efficient.
+
+Sample Syntax:
+
+# Full load
+df.write.mode("overwrite").parquet("path")
+
+# Incremental
+df_new.write.mode("append").parquet("path")
+---------------------------------------------------------------------------
+
+## 🔹 10. How do you handle duplicates?
+
+I use dropDuplicates for simple cases, and window functions like row_number when I need to retain specific records, such as the latest one.
+
+Sample Syntax:
+
+df.dropDuplicates(["id"])
+
+Window Method:
+
+from pyspark.sql.window import Window
+from pyspark.sql.functions import row_number
+
+window = Window.partitionBy("id").orderBy(df["date"].desc())
+df = df.withColumn("rn", row_number().over(window)).filter("rn = 1")
+--------------------------------------------------------------------------------
+
+## 🔹 Bonus: Which ETL type are you working on?
+
+I am working on batch ETL processing.
+----------------------------------------------------------------------------------
+
+# 🚀 Notes
+
+* Always structure answers using: **First → Then → Finally**
+* Focus on clarity and real-time examples
+* Keep answers concise and confident
+
+---
