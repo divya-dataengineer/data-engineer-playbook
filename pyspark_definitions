@@ -1,0 +1,90 @@
+🔹 1. DataFrame
+
+Definition:
+A DataFrame is a distributed collection of data organized into named columns, similar to a table in a database.
+
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("Practice").getOrCreate()
+
+data = [(1, "Alice", 25, 50000)]
+columns = ["id", "name", "age", "salary"]
+
+df = spark.createDataFrame(data, columns)
+df.show()
+-------------------------------------------------------------------------------------------------------------------
+🔹 2. select()
+
+Definition:
+Used to select specific columns from a DataFrame.
+
+df.select("name", "salary").show()
+--------------------------------------------------------------------------------------------------------------------
+🔹 3. filter()
+
+Definition:
+Used to filter rows based on a condition.
+
+from pyspark.sql.functions import col
+
+df.filter(col("salary") > 50000).show()
+----------------------------------------------------------------------------------------------------------------------
+🔹 4. withColumn()
+
+Definition:
+Used to add a new column or modify an existing column.
+
+df = df.withColumn("bonus", col("salary") * 0.1)
+----------------------------------------------------------------------------------------------------------------------
+🔹 5. withColumnRenamed()
+
+Definition:
+Used to rename a column.
+
+df = df.withColumnRenamed("name", "employee_name")
+-----------------------------------------------------------------------------------------------------------------------
+🔹 6. drop()
+
+Definition:
+Used to remove a column from a DataFrame.
+
+df = df.drop("age")
+-----------------------------------------------------------------------------------------------------------------------
+🔹 7. Immutability
+
+Definition:
+PySpark DataFrames are immutable, meaning they cannot be changed after creation. Every operation returns a new DataFrame.
+-------------------------------------------------------------------------------------------------------------------------
+🔹 8. Transformation
+
+Definition:
+A transformation is an operation that returns a new DataFrame and does not execute immediately.
+
+df_filtered = df.filter(col("salary") > 50000)
+df_selected = df.select("name", "salary")
+--------------------------------------------------------------------------------------------------------------------------
+🔹 9. Action
+
+Definition:
+An action triggers execution and returns a result.
+
+df.show()
+df.count()
+df.collect()
+-----------------------------------------------------------------------------------------------------------------
+🔹 10. Lazy Evaluation
+
+Definition:
+Lazy evaluation means Spark delays execution of transformations until an action is called.
+
+Example
+df1 = df.filter(col("salary") > 50000)
+df2 = df1.select("name")
+
+df2.show()
+------------------------------------------------------------------------------------------------------------------
+🎯 Key Takeaways
+DataFrames are immutable
+Transformations are lazy
+Actions trigger execution
+Spark optimizes execution using lazy evaluation
